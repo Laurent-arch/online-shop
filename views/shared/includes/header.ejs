@@ -1,6 +1,16 @@
 <header>
     <div><a href="/">WDE</a></div>
     <nav>
-        
+        <ul>
+            <% if(locals.isAuth) { %>
+                <li>
+                    <form action="/logout" method="post">
+                        <button>Logout</button>
+                    </form>
+                    
+                </li>
+                <% } %>
+
+        </ul>
     </nav>
 </header>
