@@ -2,10 +2,10 @@ const User = require("../models/user.model");
 
 const authUtil = require("../utils/authentication");
 const validation = require("../utils/validation");
-const flashedSession = require("../utils/session-flash");
+const sessionFlash = require("../utils/session-flash");
 
 const getSignup = (req, res) => {
-  let sessionData = flashedSession.getSessionsData(req);
+  let sessionData = sessionFlash.getSessionsData(req);
 
   if(!sessionData) {
     sessionData = {
@@ -21,16 +21,17 @@ const getSignup = (req, res) => {
   res.render("customer/auth/signup", {inputData: sessionData});
 };
 
-const signup = async (req, res, next) => {
+async function signup(req, res, next) {
   const enteredData = {
     email: req.body.email,
-    confirmEmail: req.body['confirm-email'],
+    confirmEmail: req.body["confirm-email"],
     password: req.body.password,
     fullname: req.body.fullname,
     street: req.body.street,
     postal: req.body.postal,
     city: req.body.city,
   };
+
   if (
     !validation.userDetailsValid(
       req.body.email,
@@ -42,14 +43,14 @@ const signup = async (req, res, next) => {
     ) ||
     !validation.emailIsConfirmed(req.body.email, req.body["confirm-email"])
   ) {
-    flashedSession.flashDataSession(
+    sessionFlash.flashDataToSession(
       req,
       {
         errorMessage:
-          "Please check your inputs. Password must be at least 6 characters long",
+          "Please check your input. Password must be at least 6 character slong, postal code must be 5 characters long.",
         ...enteredData,
       },
-      () => {
+      function () {
         res.redirect("/signup");
       }
     );
@@ -66,14 +67,16 @@ const signup = async (req, res, next) => {
   );
 
   try {
-    const existAlready = await user.existAlready();
+    const existsAlready = await user.existAlready();
 
-    if (existAlready) {
-      flashedSession.flashDataSession(
+    if (existsAlready) {
+      sessionFlash.flashDataToSession(
         req,
-        { errorMessage: "User exists already, try logging instead" },
-        ...enteredData,
-        () => {
+        {
+          errorMessage: "User exists already! Try logging in instead!",
+          ...enteredData,
+        },
+        function () {
           res.redirect("/signup");
         }
       );
@@ -87,10 +90,10 @@ const signup = async (req, res, next) => {
   }
 
   res.redirect("/login");
-};
+}
 
 const getLogin = (req, res) => {
-  let sessionData = flashedSession.getSessionsData(req);
+  let sessionData = sessionFlash.getSessionsData(req);
 
   if(!sessionData) {
     sessionData = {
@@ -118,7 +121,7 @@ const login = async (req, res, next) => {
   };
 
   if (!existingUser) {
-    flashedSession.flashDataSession(
+    sessionFlash.flashDataToSession(
       req,
       sessionErrorData,
 
@@ -132,7 +135,7 @@ const login = async (req, res, next) => {
   const passwordIsCorrect = await user.comparePassword(existingUser.password);
 
   if (!passwordIsCorrect) {
-    flashedSession.flashDataSession(
+    sessionFlash.flashDataToSession(
       req,
       sessionErrorData,
 

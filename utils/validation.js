@@ -1,28 +1,29 @@
-const isEmpty = (value) => {
-  return !value || value.trim() !== "";
-};
+function isEmpty(value) {
+  return !value || value.trim() === "";
+}
 
-const userCredentialsValid = (email, password) => {
+function userCredentialsAreValid(email, password) {
   return (
     email && email.includes("@") && password && password.trim().length >= 6
   );
-};
+}
 
-const userDetailsValid = (email, password, name, street, postal, city) => {
+function userDetailsValid(email, password, name, street, postal, city) {
   return (
-    userCredentialsValid(email, password) &&
+    userCredentialsAreValid(email, password) &&
     !isEmpty(name) &&
     !isEmpty(street) &&
     !isEmpty(postal) &&
     !isEmpty(city)
   );
-};
+}
 
-const emailIsConfirmed = (email, confirmedEmail) => {
-  return email === confirmedEmail;
-};
+function emailIsConfirmed(email, confirmEmail) {
+  return email === confirmEmail;
+}
 
 module.exports = {
   userDetailsValid,
   emailIsConfirmed,
+  
 };

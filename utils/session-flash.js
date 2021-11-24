@@ -5,12 +5,12 @@ const getSessionsData = (req) => {
     return sessionData;
 };
 
-const flashDataSession = (req, data, action) => {
+const flashDataToSession = (req, data, action) => {
     req.session.flashedData = data;
     req.session.save(action);
 };
 
 module.exports = {
   getSessionsData,
-  flashDataSession,
+  flashDataToSession,
 };
