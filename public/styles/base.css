@@ -68,6 +68,15 @@ a {
     border: 1px solid var(--color-primary-500);
     border-radius: var(--border-radius-small);
 }
+.btn-alt{
+    background-color: transparent;
+    color: var(--color-primary-500);
+}
+.btn-alt:hover,
+.btn-alt:active{
+    background-color: var(--color-primary-500-bg);
+    color: var(--color-primary-100);
+}
 .btn:hover,
 .btn:active {
     background-color: var(--color-primary-700);
